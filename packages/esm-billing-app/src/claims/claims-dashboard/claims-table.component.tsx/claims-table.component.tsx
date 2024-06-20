@@ -25,7 +25,7 @@ import styles from './claims-table.scss';
 import { LineItem, MappedBill } from '../../../types';
 
 type ClaimsTableProps = {
-  bill: MappedBill;
+  bill: any;
   isSelectable?: boolean;
   isLoadingBill?: boolean;
   onSelectItem?: (selectedLineItems: LineItem[]) => void;
@@ -34,7 +34,7 @@ type ClaimsTableProps = {
 const ClaimsTable: React.FC<ClaimsTableProps> = ({ bill, isSelectable = true, isLoadingBill, onSelectItem }) => {
   const { t } = useTranslation();
   const { lineItems } = bill;
-  const paidLineItems = lineItems?.filter((item) => item.paymentStatus === 'PAID') ?? [];
+  const paidLineItems = lineItems?.filter((item) => item?.paymentStatus === 'PAID') ?? [];
   const layout = useLayoutType();
   const responsiveSize = isDesktop(layout) ? 'sm' : 'lg';
   const [selectedLineItems, setSelectedLineItems] = useState(paidLineItems ?? []);
@@ -72,10 +72,11 @@ const ClaimsTable: React.FC<ClaimsTableProps> = ({ bill, isSelectable = true, is
           no: `${index + 1}`,
           id: `${item.uuid}`,
           inventoryname: processBillItem(item),
-          serialno: bill.receiptNumber,
+          serialno: bill.receiptNumber ?? item.receiptNumber,
           status: item.paymentStatus,
           total: item.price * item.quantity,
-          dateofbillcreation: formatDate(new Date(bill.dateCreated), { mode: 'standard' }),
+          dateofbillcreation: 'bill?.dateCreated', // ? formatDate(new Date(bill?.dateCreated), { mode: 'standard' })
+          // : formatDate(new Date(item?.dateCreated), { mode: 'standard' }),
         };
       }) ?? [],
     [bill.dateCreated, bill.receiptNumber, filteredLineItems],

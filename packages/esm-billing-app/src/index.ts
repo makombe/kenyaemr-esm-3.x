@@ -14,6 +14,8 @@ import VisitAttributeTags from './invoice/payments/visit-tags/visit-attribute.co
 import InitiatePaymentDialog from './invoice/payments/initiate-payment/initiate-payment.component';
 import DrugOrder from './billable-services/billiable-item/drug-order.component';
 import LabOrder from './billable-services/billiable-item/lab-order.component';
+import ClaimsDashboard from './claims/claims-dashboard/claims-dashboard.component';
+import ClaimScreen from './claims/claims-dashboard/claims-screen.component';
 
 const moduleName = '@kenyaemr/esm-billing-app';
 
@@ -40,6 +42,14 @@ export const billingDashboardLink = getSyncLifecycle(
   }),
   options,
 );
+// t('claims', 'Claims')
+export const claimsDashboardLink = getSyncLifecycle(
+  createLeftPanelLink({
+    name: 'bill-claims',
+    title: 'Claims',
+  }),
+  options,
+);
 
 export const root = getSyncLifecycle(rootComponent, options);
 export const billingPatientSummary = getSyncLifecycle(BillHistory, options);
@@ -52,3 +62,5 @@ export const visitAttributeTags = getSyncLifecycle(VisitAttributeTags, options);
 export const initiatePaymentDialog = getSyncLifecycle(InitiatePaymentDialog, options);
 export const labOrder = getSyncLifecycle(LabOrder, options);
 export const drugOrder = getSyncLifecycle(DrugOrder, options);
+export const claims = getSyncLifecycle(ClaimsDashboard, options);
+//export const claimScreen = getSyncLifecycle(ClaimScreen, options);

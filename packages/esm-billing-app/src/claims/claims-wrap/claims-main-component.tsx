@@ -8,22 +8,35 @@ import { computeTotalPrice } from '../../utils';
 import { ClaimsBreakDown } from '../claims-dashboard/claims-breakdown/claims-breakdown.component';
 import { convertToCurrency } from '../../helpers';
 import { useTranslation } from 'react-i18next';
+import { useBillsContext } from '../claims-dashboard/claims-period/bills-context';
 
 interface ClaimsMainProps {
-  bill: MappedBill;
+  bill: any;
 }
 
 const ClaimMainComponent: React.FC<ClaimsMainProps> = ({ bill }) => {
   const { t } = useTranslation();
 
   const [selectedLineItems, setSelectedLineItems] = useState([]);
+  const { bills } = useBillsContext();
+  const mergedBills = bills.flatMap((item) =>
+    item.lineItems.map((lineItem) => ({
+      ...lineItem,
+      receiptNumber: item.receiptNumber,
+      dateCreated: item.dateCreated,
+    })),
+  );
+  const billsByPeriod = {
+    lineItems: mergedBills,
+  };
+
   const { isLoading: isLoadingBill, error } = useBill(bill.uuid);
   const handleSelectItem = (lineItems: Array<LineItem>) => {
     const paidLineItems = bill?.lineItems?.filter((item) => item.paymentStatus === 'PAID') ?? [];
     setSelectedLineItems([...lineItems, ...paidLineItems]);
   };
   useEffect(() => {
-    const paidLineItems = bill?.lineItems?.filter((item) => item.paymentStatus === 'PAID') ?? [];
+    const paidLineItems = bill?.lineItems?.filter((item) => item?.paymentStatus === 'PAID') ?? [];
     setSelectedLineItems(paidLineItems);
   }, [bill.lineItems]);
   const hasMoreThanOneLineItem = bill?.lineItems?.length > 1;
@@ -32,12 +45,11 @@ const ClaimMainComponent: React.FC<ClaimsMainProps> = ({ bill }) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.content}>
-        <ClaimsTable bill={bill} isLoadingBill={isLoadingBill} onSelectItem={handleSelectItem} />
+        <ClaimsTable bill={billsByPeriod} isLoadingBill={isLoadingBill} onSelectItem={handleSelectItem} />
         <ClaimsForm bill={bill} />
       </div>
       <ClaimsBreakDown label={t('totalClaimAmount', 'Total Claims Amount')} value={convertToCurrency(computedTotal)} />
     </div>
   );
 };
-
 export default ClaimMainComponent;

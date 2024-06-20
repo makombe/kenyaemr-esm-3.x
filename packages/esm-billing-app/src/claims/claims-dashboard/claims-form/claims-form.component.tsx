@@ -24,7 +24,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 type ClaimsFormProps = {
-  bill: MappedBill;
+  bill: any;
 };
 
 const ClaimsFormSchema = z.object({

@@ -37,6 +37,7 @@
   "claimcode": " Claim Code",
   "claimExplanation": "Claim Explanation",
   "claimJustification": "Claim Justification",
+  "claims": "Claims",
   "createClaim": "Create Claim",
   "createClaimError": "Create Claim error",
   "diagnoses": "Diagnoses",
